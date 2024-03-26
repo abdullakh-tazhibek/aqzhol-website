@@ -1,19 +1,47 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
+import { Registration } from "./Registration";
 
 export function Roles() {
-  const roleCard = useSelector((state) => state.roleCard);
+  const [role, setRole] = useState("");
+  const selectRole = (id) => {
+    if (id === 1) {
+      setRole("passenger");
+    } else {
+      setRole("driver");
+    }
+  };
 
   return (
     <div>
-      <h3>Выберите свою роль</h3>
-      <ul>
-        {roleCard.map((card, index) => (
-          <img key={index} alt="role" width="140" height="160">
-            {card}
-          </img>
-        ))}
-      </ul>
+      {role === "" ? (
+        <div>
+          <h3>Выберите свою роль</h3>
+          <div>
+            <div onClick={() => selectRole("passenger")}>
+              <img
+                src={require("../assets/img/passengerCard.png")}
+                alt="passenger"
+                width="140"
+                height="160"
+              />
+            </div>
+
+            <div onClick={() => selectRole()}>
+              <img
+                src={require("../assets/img/driverCard.png")}
+                alt="driver"
+                width="140"
+                height="160"
+              />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div>
+          {console.log(role)}
+          <Registration />
+        </div>
+      )}
     </div>
   );
 }

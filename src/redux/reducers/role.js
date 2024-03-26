@@ -1,6 +1,5 @@
 const initialState = {
   userRole: null,
-  roleCard: null,
 };
 
 export const role = (state = initialState, action) => {
@@ -9,12 +8,6 @@ export const role = (state = initialState, action) => {
       return {
         ...state,
         userRole: action.payload,
-      };
-    }
-    case "ROLE_CARD": {
-      return {
-        ...state,
-        roleCard: action.payload,
       };
     }
     default:

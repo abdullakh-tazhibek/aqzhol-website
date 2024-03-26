@@ -46,6 +46,7 @@ export function Registration() {
           className={"form-control"}
         >
           <option value="Kazakhstan">Қазақстан</option>
+          <option value="Mongolia">Моңғолия</option>
           <option value="Russia">Ресей</option>
         </select>
       </div>
