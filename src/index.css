@@ -19,7 +19,7 @@ body {
   height: 100%;
   background-color: #f1f2f7;
   padding-top: 20px;
-  font-family: "ProximaNova";
+  font-family: "Roboto";
 }
 
 .registration-form {
@@ -32,22 +32,12 @@ body {
 .registration-form h2 {
   text-align: center;
 }
-.registration-form .form-group {
-  margin-bottom: 20px;
-}
-.registration-form .form-group label {
-  display: block;
-  margin-bottom: 5px;
-}
 .registration-form .form-group .form-control {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
-}
-.registration-form .form-group .form-check-label {
-  margin-left: 5px;
 }
 .registration-form .login-link {
   display: block;
@@ -68,4 +58,38 @@ body {
 }
 .registration-form .btn:hover {
   background-color: darkblue;
+}
+
+/* -- phone number with country choice -- */
+.phone_container {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+.phone_container__phone {
+  padding-left: 10px;
+}
+/* dropdown menu with countries list */
+.menu {
+  position: absolute;
+  width: 200;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 6px;
+  margin-top: 160px;
+}
+.menu__list {
+}
+.menu__item {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+.menu__item:nth-child(n + 2) {
+  margin-top: 15px;
+}
+.menu__item img {
+  width: 24px;
+  height: 24px;
+  margin-right: 15px;
 }

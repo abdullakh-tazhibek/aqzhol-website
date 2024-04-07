@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { InputMask } from "primereact/inputmask";
 
 export function Login() {
-  const [country, setCountry] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
 
@@ -11,42 +9,30 @@ export function Login() {
   const handleLogin = () => {
     // Add your registration logic here
     console.log("Registration data:", {
-      country,
       phoneNumber,
       password,
     });
   };
 
-  const countryCodes = ["+7-7", "+976", "+7-"];
-  const phoneMasks = ["99-999-99-99", "99-99-99-99", "999-999-99-99"];
+  const validEmail = new RegExp(
+    "^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$"
+  );
+  const validPassword = new RegExp("^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,}$");
 
   return (
     <div className={"registration-form"}>
       <h2>Аккаунтқа кіру</h2>
 
-      {/* Choose country */}
-      <div className={"form-group"}>
-        <label htmlFor="country">Мемлекет:</label>
-        <select
-          id="country"
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-          className={"form-control"}
-        >
-          <option value="Kazakhstan">Қазақстан</option>
-          <option value="Mongolia">Моңғолия</option>
-          <option value="Russia">Ресей</option>
-        </select>
-      </div>
-
       {/* Phone number */}
       <div className={"form-group"}>
         <label htmlFor="phoneNumber">Телефон нөміріңіз:</label>
-        {countryCodes[0]}
-        <InputMask
+        <input
+          type="number"
+          name="phone"
+          placeholder="Нөмірдің басы +7 немесе +976"
+          pattern="^-?[0-9]\d*\.?\d*$"
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
-          mask={`${phoneMasks[0]}`}
         />
       </div>
 
@@ -60,13 +46,21 @@ export function Login() {
           onChange={(e) => setPassword(e.target.value)}
           className={"form-control"}
         />
+        {/* hide and show password */}
         <span className="form_eye" onClick={() => setEye((prev) => !prev)}>
           {eye ? (
-            <img src={require("../assets/img/eye_fill.png")} alt="eye_fill" />
+            <img
+              src={require("../assets/img/eye_fill.png")}
+              alt="eye_fill"
+              width={24}
+              height={24}
+            />
           ) : (
             <img
               src={require("../assets/img/eye_off_fill.png")}
               alt="eye_off_fill"
+              width={24}
+              height={24}
             />
           )}
         </span>
@@ -79,14 +73,14 @@ export function Login() {
         </label>
       </div>
 
-      {/* Link to Login */}
+      {/* Link to Registration */}
       <div className={"form-group"}>
-        <a href="/register" className={"login-link"}>
+        <a href="/registration" className={"login-link"}>
           Тіркелу
         </a>
       </div>
 
-      {/* Registration btn */}
+      {/* Login btn */}
       <button onClick={handleLogin} className={"btn btn-primary"}>
         Кіру
       </button>

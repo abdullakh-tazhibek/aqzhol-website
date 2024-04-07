@@ -1,13 +1,3 @@
 {
-  "roles": [
-    {
-      "id": 1,
-      "role": "passenger"
-    },
-    {
-      "id": 2,
-      "role": "driver"
-    }
-  ],
   "users": []
 }

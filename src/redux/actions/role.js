@@ -1,4 +1,4 @@
-export const userRole = () => ({
+export const userRole = (roleId) => ({
   type: "USER_ROLE",
-  payload: ["passenger", "driver"],
+  payload: roleId,
 });
