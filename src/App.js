@@ -1,19 +1,32 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 
-import { Home } from "./pages/Home";
+//main pages
+import { Home } from "./pages/navMenu/Home";
+import { Profile } from "./pages/navMenu/Profile";
+import { Create } from "./pages/navMenu/Create";
 
-import { Login } from "./auth/Login";
-import { Roles } from "./auth/Roles";
+//additional
 import { Privacy } from "./pages/Privacy";
 import { NotFound } from "./pages/NotFound";
 
-export function App({ isLoggedIn }) {
+//auth
+import { Login } from "./auth/Login";
+import { Roles } from "./auth/Roles";
+
+export function App({ user }) {
   return (
     <div className="App">
-      {/* {isLoggedIn ? <Home /> : <Login />} */}
-
+      {/* <Link to={user.phoneNumber?.length ? "/home" : "/login"} /> */}
+      {/* WEB-APP ROUTES */}
+      {/* 
+        НЕГІЗГІ МОМЕНТТЕРДІ БІТКЕННЕН КЕЙІН, ТӨМЕНДЕГІНІ ЖАЗУ МІНДЕТТІ
+        <Link to={user.phoneNumber?.length ? 'LINK_HERE' : '/login'}> 
+      */}
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/create" element={<Create />} />
+
         {/* Passenger */}
         {/* 
       <Route path="/send" element={<SendDelivery />} />
@@ -28,8 +41,9 @@ export function App({ isLoggedIn }) {
       <Route path="/my-ride" element={<MyRide />} />
       */}
 
-        <Route path="*" element={<NotFound />} />
         <Route path="/privacy" element={<Privacy />} />
+        <Route path="*" element={<NotFound />} />
+
         <Route path="/register" element={<Roles />} />
         <Route path="/login" element={<Login />} />
       </Routes>

@@ -1,33 +1,24 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { Registration } from "./Registration";
-import { useDispatch } from "react-redux";
-import { userRole } from "../redux/actions/role";
+import { useDispatch, useSelector } from "react-redux";
+import { setRole } from "../redux/auth";
 
 export function Roles() {
   const dispatch = useDispatch();
-  const [role, setRole] = useState("");
-  const selectUserRole = useCallback(
-    (index) => {
-      dispatch(userRole(index));
-      if (index === 1) {
-        setRole("passenger");
-      } else {
-        setRole("driver");
-      }
-    },
-    [dispatch]
-  );
+  const role = useSelector((state) => state.auth.role);
+
+  const onSetRole = (r) => {
+    dispatch(setRole(role === r));
+  };
 
   return (
     <div>
       {role === "" ? (
-        <div>
+        <div className="role-container">
           <h3>Нұсқаның бірін таңдаңыз</h3>
 
-          <p>Бір нөмір, поштамен тек қана бір аккаунтты тіркей аласыз</p>
-
-          <div>
-            <div onClick={() => selectUserRole(1)}>
+          <div className="role-cards">
+            <div onClick={() => onSetRole("пассажир")}>
               <img
                 src={require("../assets/img/passengerCard.png")}
                 alt="passenger"
@@ -36,7 +27,7 @@ export function Roles() {
               />
             </div>
 
-            <div onClick={() => selectUserRole(2)}>
+            <div onClick={() => onSetRole("водитель")}>
               <img
                 src={require("../assets/img/driverCard.png")}
                 alt="driver"

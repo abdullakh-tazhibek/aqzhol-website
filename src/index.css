@@ -20,6 +20,8 @@ body {
   background-color: #f1f2f7;
   padding-top: 20px;
   font-family: "Roboto";
+  display: flex;
+  justify-content: center;
 }
 
 .registration-form {
@@ -60,6 +62,18 @@ body {
   background-color: darkblue;
 }
 
+/* -- ROLES -- */
+.role-container {
+  text-align: center;
+}
+.role-cards {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* -- REGISTRATION -- */
 /* -- phone number with country choice -- */
 .phone_container {
   display: flex;
