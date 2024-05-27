@@ -1,4 +1,4 @@
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 //main pages
 import { Home } from "./pages/navMenu/Home";
@@ -12,16 +12,11 @@ import { NotFound } from "./pages/NotFound";
 //auth
 import { Login } from "./auth/Login";
 import { Roles } from "./auth/Roles";
+import { Registration } from "./auth/Registration";
 
-export function App({ user }) {
+export function App() {
   return (
     <div className="App">
-      {/* <Link to={user.phoneNumber?.length ? "/home" : "/login"} /> */}
-      {/* WEB-APP ROUTES */}
-      {/* 
-        НЕГІЗГІ МОМЕНТТЕРДІ БІТКЕННЕН КЕЙІН, ТӨМЕНДЕГІНІ ЖАЗУ МІНДЕТТІ
-        <Link to={user.phoneNumber?.length ? 'LINK_HERE' : '/login'}> 
-      */}
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/profile" element={<Profile />} />
@@ -31,20 +26,19 @@ export function App({ user }) {
         {/* 
       <Route path="/send" element={<SendDelivery />} />
       <Route path="/find" element={<FindTaxi />} />
-      <Route path="/my-delivery" element={<MyDelivery />} /> 
       */}
 
         {/* Driver */}
         {/* 
       <Route path="/take" element={<TakeDelivery />} />
       <Route path="/make" element={<MakeRide />} />
-      <Route path="/my-ride" element={<MyRide />} />
       */}
 
         <Route path="/privacy" element={<Privacy />} />
         <Route path="*" element={<NotFound />} />
 
-        <Route path="/register" element={<Roles />} />
+        <Route path="/roles" element={<Roles />} />
+        <Route path="/register" element={<Registration />} />
         <Route path="/login" element={<Login />} />
       </Routes>
     </div>

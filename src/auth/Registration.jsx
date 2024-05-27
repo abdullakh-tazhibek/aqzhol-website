@@ -1,92 +1,65 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import ReactInputMask from "react-input-mask";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  authUser,
+  setCountry,
+  setEmail,
+  setMessenger,
+  setName,
+  setPhoneNum,
+} from "../redux/auth.js";
 
 export function Registration() {
-  const [formData, setFormData] = useState({
-    country: "KZ",
-    phoneNumber: "",
-    name: "",
-    email: "",
-    password: "",
-    cpassword: "",
-  });
+  const dispatch = useDispatch();
+  const [eye, setEye] = useState("");
+  const [showMenu, setShowMenu] = useState("");
 
-  const EMAIL_REGEX = /^[^ ]+@[^ ]+\.[a-z]{2,5}$/;
-  const PWD_REGEX = /^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,}$/;
+  const { country, phoneNumber, name, email, messenger, role, status } =
+    useSelector((state) => state.auth.user);
 
-  const [country, setCountry] = useState("KZ");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [eye, setEye] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
+  function pickCountry(ctry) {
+    dispatch(setCountry(ctry));
+  }
+  function enterPhoneNum(e) {
+    dispatch(setPhoneNum(e));
+  }
+  function enterName(e) {
+    dispatch(setName(e));
+  }
+  function enterEmail(e) {
+    dispatch(setEmail(e));
+  }
+  function enterMessenger(e) {
+    dispatch(setMessenger(e));
+  }
 
-  const [errors, setErrors] = useState({});
-  const [valid, setValid] = useState(true);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({ mode: "onBlur" });
 
-  const handleSubmit = (e) => {
-    //e.preventDefault();
-    let isValid = true;
-    let validationErrors = {};
-    if (formData.phoneNumber === "" || formData.phoneNumber === null) {
-      isValid = false;
-      validationErrors.phoneNumber = "Нөміріңіз жазылған жоқ";
-    }
-    if (formData.name === "" || formData.name === null) {
-      isValid = false;
-      validationErrors.name = "Есіміңіз жазылған жоқ";
-    }
-
-    if (formData.email === "" || formData.email === null) {
-      isValid = false;
-      validationErrors.email = "Поштаңыз жазылған жоқ";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      isValid = false;
-      validationErrors.email = "Поштаңыз дұрыс жазылған жоқ";
-    }
-
-    if (formData.password === "" || formData.password === null) {
-      isValid = false;
-      validationErrors.password = "Құпиясөз жазылған жоқ";
-    } else if (formData.password.length < 6) {
-      isValid = false;
-      validationErrors.password = "Құпиясөз 6 символдан кем болмау керек";
-    }
-
-    if (formData.cpassword !== formData.cpassword) {
-      isValid = false;
-      validationErrors.cpassword = "Құпиясөздер сәйкес келмейді";
-    }
-
-    setErrors(validationErrors);
-    setValid(isValid);
-
-    if (Object.keys(validationErrors).length === 0) {
-      alert("Аккаунт тіркелді");
-    }
+  const registerUserFunc = (data) => {
+    const newData = {
+      status,
+      role,
+      country,
+      ...data,
+    };
+    dispatch(authUser({ user: newData }));
   };
 
-  const submitForm = (data) => {
-    let { confirmPwd, ...user } = data;
-    //createUser(user);
-  };
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,24}$/;
 
   return (
     <div className={"registration-form"}>
       <h2>Тіркелу</h2>
-      {valid ? (
-        <></>
-      ) : (
-        <span>
-          {errors.phoneNumber}
-          {errors.name}
-          {errors.email}
-          {errors.password}
-          {errors.cpassword}
-        </span>
-      )}
-      <form noValidate onSubmit={handleSubmit(submitForm)}>
+      <form noValidate onSubmit={handleSubmit(registerUserFunc)}>
         {/* phone number with country choice */}
         <div className="phone_container">
           {/* choose country */}
@@ -117,21 +90,21 @@ export function Registration() {
           {showMenu && (
             <div className="menu">
               <ul className="menu__list">
-                <li className="menu__item" onClick={() => setCountry("KZ")}>
+                <li className="menu__item" onClick={() => pickCountry("KZ")}>
                   <img
                     alt="kaz-flag"
                     src={require("../assets/img/kazakhstan-32.png")}
-                  />{" "}
+                  />
                   Қазақстан
-                </li>
-                <li className="menu__item" onClick={() => setCountry("MN")}>
+                </li>{" "}
+                <li className="menu__item" onClick={() => pickCountry("MN")}>
                   <img
                     alt="mgl-flag"
                     src={require("../assets/img/mongolia-32.png")}
                   />
                   Моңғолия
                 </li>
-                <li className="menu__item" onClick={() => setCountry("RU")}>
+                <li className="menu__item" onClick={() => pickCountry("RU")}>
                   <img
                     alt="rus-flag"
                     src={require("../assets/img/russia-32.png")}
@@ -147,63 +120,63 @@ export function Registration() {
             {country === "KZ" && (
               <ReactInputMask
                 mask={`+7(799)-999-99-99`}
-                // {...register("phone", {
-                //   required: {
-                //     value: true,
-                //     message: "Нөміріңіз жазылған жоқ",
-                //   },
-                // })}
+                {...register("phone", {
+                  required: {
+                    value: true,
+                    message: "Нөміріңіз жазылған жоқ",
+                  },
+                })}
                 type="tel"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                value={phoneNumber || ""}
+                onChange={(e) => enterPhoneNum(e.target.value)}
               />
             )}
             {country === "MN" && (
               <ReactInputMask
                 mask={`+\\976-99-99-99-99`}
-                // {...register("phone", {
-                //   required: {
-                //     value: true,
-                //     message: "Нөміріңіз жазылған жоқ",
-                //   },
-                // })}
+                {...register("phone", {
+                  required: {
+                    value: true,
+                    message: "Нөміріңіз жазылған жоқ",
+                  },
+                })}
                 type="tel"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                value={phoneNumber || ""}
+                onChange={(e) => enterPhoneNum(e.target.value)}
               />
             )}
             {country === "RU" && (
               <ReactInputMask
                 mask={`+7(999)-999-99-99`}
-                // {...register("phone", {
-                //   required: {
-                //     value: true,
-                //     message: "Нөміріңіз жазылған жоқ",
-                //   },
-                // })}
+                {...register("phone", {
+                  required: {
+                    value: true,
+                    message: "Нөміріңіз жазылған жоқ",
+                  },
+                })}
                 type="tel"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                value={phoneNumber || ""}
+                onChange={(e) => enterPhoneNum(e.target.value)}
               />
             )}
           </div>
-          <span>{errors?.phoneNumber?.message}</span>
+          {/* <span>{errors?.phoneNumber?.message}</span> */}
         </div>
 
         {/* Name */}
         <div className={"form-group"}>
           <input
-            // {...register("name", {
-            //   required: {
-            //     value: true,
-            //     message: "Есіміңіз жазылған жоқ",
-            //   },
-            // })}
+            {...register("name", {
+              required: {
+                value: true,
+                message: "Есіміңіз жазылған жоқ",
+              },
+            })}
             placeholder="Есіміңіз"
             type="text"
             id="2"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={name || ""}
+            onChange={(e) => enterName(e.target.value)}
             className={"form-control"}
           />
         </div>
@@ -212,40 +185,66 @@ export function Registration() {
         {/* Email */}
         <div className={"form-group"}>
           <input
-            // {...register("email", {
-            //   required: {
-            //     message: "Пошта жазылған жоқ",
-            //     value: true,
-            //   },
-            //   pattern: {
-            //     message: "Поштаңыз дұрыс жазылған жоқ",
-            //     value: EMAIL_REGEX,
-            //   },
-            // })}
+            {...register("email", {
+              required: {
+                message: "Пошта жазылған жоқ",
+                value: true,
+              },
+              pattern: {
+                message: "Поштаңыз дұрыс жазылған жоқ",
+                value: EMAIL_REGEX,
+              },
+            })}
             placeholder="Email"
             type="email"
             id="3"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={email || ""}
+            onChange={(e) => enterEmail(e.target.value)}
             className={"form-control"}
           />
         </div>
         <span>{errors?.email?.message}</span>
 
+        {/* Messenger link */}
+        <div className={"form-group"}>
+          <input
+            {...register("messenger", {
+              required: {
+                value: true,
+                message: "Сілтеме жазылған жоқ",
+              },
+            })}
+            placeholder="Messenger сілтемесі"
+            type="link"
+            id="6"
+            value={messenger || ""}
+            onChange={(e) => enterMessenger(e.target.value)}
+            className={"form-control"}
+          />
+          <Link
+            to={
+              "https://www.youtube.com/watch?v=mAXtasUgY0k&ab_channel=%D0%90%D0%BD%D0%B3%D0%B5%D0%BB%D0%B8%D0%BD%D0%B0%D0%9C%D0%B8%D1%82%D1%87%D0%B5%D0%BB%D0%BB"
+            }
+          >
+            Қалай аламын?
+          </Link>
+        </div>
+        <span>{errors?.messenger?.message}</span>
+
         {/* Password */}
         <div className={"form-group"}>
           <input
-            // {...register("password", {
-            //   required: {
-            //     value: true,
-            //     message: "Құпиясөз жазылған жоқ",
-            //   },
-            //   pattern: {
-            //     message:
-            //       "Кем дегенде 6 символды саннан, үлкен әріптен тұру керек",
-            //     value: PWD_REGEX,
-            //   },
-            // })}
+            {...register("password", {
+              required: {
+                value: true,
+                message: "Құпиясөз жазылған жоқ",
+              },
+              pattern: {
+                message:
+                  "Кем дегенде 6 символды саннан, үлкен, кіші әріптерден тұру керек",
+                value: PWD_REGEX,
+              },
+            })}
             type={eye ? "text" : "password"}
             id="4"
             placeholder="Құпиясөз"
@@ -264,17 +263,22 @@ export function Registration() {
           <p>{errors.password && errors?.password?.message}</p>
         </div>
 
+        {/* Forgot password? */}
+        <Link href="" className={"form-check-label"}>
+          Құпиясөзді ұмыттыңыз ба?
+        </Link>
+
         {/* Password repeat */}
-        <div className={"form-group"}>
+        {/* <div className={"form-group"}>
           <input
             type={eye ? "text" : "password"}
             id="5"
             placeholder="Құпиясөзді қайталаңыз"
             className={"form-control"}
-            // {...register("confirmPwd", {
-            //   validate: (value) =>
-            //     value === password.current || "Құпиясөздер сәйкес келмейді!",
-            // })}
+            {...register("confirmPwd", {
+              validate: (value) =>
+                value === password.current || "Құпиясөздер сәйкес келмейді!",
+            })}
           />
           <span className="form_eye" onClick={() => setEye((prev) => !prev)}>
             {eye ? (
@@ -287,7 +291,7 @@ export function Registration() {
             )}
           </span>
           {errors?.confirmPwd && <p>{errors?.confirmPwd?.message}</p>}
-        </div>
+        </div> */}
 
         {/* Registration btn */}
         <button type="submit" className={"btn btn-primary"}>
@@ -297,11 +301,6 @@ export function Registration() {
         {/* Privacy policy */}
         <Link href="/privacy" className={"form-check-label"}>
           Тіркелу арқылы құпиялық саясатымен келісемін
-        </Link>
-
-        {/* Link to Login */}
-        <Link href="/login" className={"login-link"}>
-          Кіру
         </Link>
       </form>
     </div>
