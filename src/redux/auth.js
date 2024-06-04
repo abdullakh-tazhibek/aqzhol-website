@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "../api/base";
 
-export const authUser = createAsyncThunk(
-  "fetch/authUser",
+export const registration = createAsyncThunk(
+  "auth/registration",
   async (payload, { rejectWithValue }) => {
     try {
       const { user } = payload;
@@ -11,6 +11,21 @@ export const authUser = createAsyncThunk(
       if (res.status !== 201) {
         throw new Error("Сұраныста қателік бар!");
       }
+
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const login = createAsyncThunk(
+  "auth/login",
+  async (payload, { rejectWithValue }) => {
+    try {
+      console.log(payload);
+      const { user } = payload;
+      const res = await axios.get("/users", user);
 
       if (res.status !== 200) {
         throw new Error("Аккаунтқа кіруде қателік бар!");
@@ -24,18 +39,11 @@ export const authUser = createAsyncThunk(
 );
 
 const initialState = {
-  user: {
-    role: null,
-    country: "KZ",
-    phoneNumber: null,
-    name: null,
-    email: null,
-    messenger: null,
-  },
-
-  status: "Idle",
-  error: null,
+  user: null,
+  role: null,
+  isLoggedIn: false,
   token: null,
+  error: null,
 };
 
 export const auth = createSlice({
@@ -44,62 +52,44 @@ export const auth = createSlice({
   reducers: {
     //Role
     setRole: (state, action) => {
-      state.user.role = action.payload;
-    },
-
-    //Registration
-    setCountry: (state, action) => {
-      state.user.country = action.payload;
-    },
-    setPhoneNum: (state, action) => {
-      state.user.phoneNumber = action.payload;
-    },
-    setName: (state, action) => {
-      state.user.name = action.payload;
-    },
-    setEmail: (state, action) => {
-      state.user.email = action.payload;
-    },
-    setMessenger: (state, action) => {
-      state.user.messenger = action.payload;
+      state.role = action.payload;
     },
 
     //Logout
     setLogout: (state) => {
-      state.user.role = null;
-      state.user.country = null;
-      state.user.phoneNumber = null;
-      state.user.name = null;
-      state.user.email = null;
-      state.user.messenger = null;
+      state.isLoggedIn = false;
+      state.user = null;
+      state.role = null;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(authUser.pending, (state) => {
-      state.status = "loading";
-      state.error = null;
-      state.token = null;
-    });
-    builder.addCase(authUser.rejected, (state, action) => {
-      state.status = "error";
-      state.error = action.payload;
-    });
-    builder.addCase(authUser.fulfilled, (state, action) => {
-      state.status = "connected";
-      state.user = action.payload.user;
-      state.token = action.payload.accessToken;
-    });
+    builder
+      .addCase(registration.rejected, (state, action) => {
+        state.isLoggedIn = false;
+        state.error = action.payload;
+      })
+      .addCase(registration.fulfilled, (state, action) => {
+        state.isLoggedIn = true;
+        state.user = action.payload.user;
+        state.token = action.payload.accessToken;
+        state.error = null;
+      });
+
+    builder
+      .addCase(login.rejected, (state, action) => {
+        state.isLoggedIn = false;
+        state.user = null;
+        state.error = action.payload;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.isLoggedIn = true;
+        state.user = action.payload.user;
+        state.token = action.payload.accessToken;
+        state.error = null;
+      });
   },
 });
 
-export const {
-  setRole,
-  setCountry,
-  setPhoneNum,
-  setEmail,
-  setMessenger,
-  setName,
-  setLogout,
-} = auth.actions;
+export const { setRole, setLogout } = auth.actions;
 
 export default auth.reducer;

@@ -1,13 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setLogout } from "../../redux/auth";
+import { useNavigate } from "react-router-dom";
 
-export function Home({ role }) {
+export function Home() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { role } = useSelector((state) => state.auth);
+
+  useEffect(() => {}, [role]);
+
+  function onClickLogout() {
+    dispatch(setLogout());
+    navigate("/login");
+  }
+
   return (
     <div>
       <div>
         <img src={require("../../assets/img/menuLogo.png")} alt="logo" />
       </div>
-
-      {role === "passenger" && (
+      {role === "жолаушы" && (
         <>
           <div>
             <img
@@ -31,7 +44,7 @@ export function Home({ role }) {
           </div>
         </>
       )}
-      {role === "driver" && (
+      {role === "жүргізуші" && (
         <>
           <div>
             <img src={require("../../assets/img/goRide.png")} alt="go ride" />
@@ -57,6 +70,12 @@ export function Home({ role }) {
           </div>
         </>
       )}
+      <button
+        onClick={() => onClickLogout()}
+        style={{ width: "300px", height: "100px", backgroundColor: "#f45451" }}
+      >
+        выйти из аккаунта
+      </button>
     </div>
   );
 }

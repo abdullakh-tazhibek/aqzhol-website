@@ -5,7 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 export function Roles() {
   const dispatch = useDispatch();
-  const { role } = useSelector((state) => state.auth.user);
+  const { role } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   function rolePick(pos) {
@@ -43,7 +43,7 @@ export function Roles() {
         </div>
 
         {/* Link to Login */}
-        <Link href="/login" className={"login-link"}>
+        <Link to="/login" className={"login-link"}>
           Менде аккаунт бар
         </Link>
       </div>

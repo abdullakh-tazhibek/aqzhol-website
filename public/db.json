@@ -1,11 +1,24 @@
 {
   "users": [
     {
-      "id": "1876",
-      "phone": "+7(722)-222-22-22",
-      "name": "Abd",
-      "email": "csdcs@mail.ru",
-      "password": "Abd123"
+      "id": "3d75",
+      "role": "жүргізуші",
+      "country": "KZ",
+      "phone": "+7(744)-444-44-44",
+      "name": "Daulet",
+      "email": "daulet@mail.ru",
+      "messenger": "hjshdjhsjdhc.com",
+      "password": "Daulet123"
+    },
+    {
+      "id": "fda8",
+      "role": "жолаушы",
+      "country": "KZ",
+      "phone": "+7(777)-777-77-77",
+      "name": "Kuat",
+      "email": "kuatsdckl@mail.ru",
+      "messenger": "slkdnlkcsndlknsl",
+      "password": "Kuat123"
     }
   ],
   "routes": {

@@ -1,56 +1,33 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ReactInputMask from "react-input-mask";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  authUser,
-  setCountry,
-  setEmail,
-  setMessenger,
-  setName,
-  setPhoneNum,
-} from "../redux/auth.js";
+import { registration } from "../redux/auth.js";
 
 export function Registration() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [eye, setEye] = useState("");
   const [showMenu, setShowMenu] = useState("");
+  const [country, setCountry] = useState("KZ");
 
-  const { country, phoneNumber, name, email, messenger, role, status } =
-    useSelector((state) => state.auth.user);
-
-  function pickCountry(ctry) {
-    dispatch(setCountry(ctry));
-  }
-  function enterPhoneNum(e) {
-    dispatch(setPhoneNum(e));
-  }
-  function enterName(e) {
-    dispatch(setName(e));
-  }
-  function enterEmail(e) {
-    dispatch(setEmail(e));
-  }
-  function enterMessenger(e) {
-    dispatch(setMessenger(e));
-  }
+  const { role } = useSelector((state) => state.auth);
 
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm({ mode: "onBlur" });
 
   const registerUserFunc = (data) => {
     const newData = {
-      status,
       role,
       country,
       ...data,
     };
-    dispatch(authUser({ user: newData }));
+    dispatch(registration({ user: newData }));
+    navigate("/home");
   };
 
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -90,21 +67,21 @@ export function Registration() {
           {showMenu && (
             <div className="menu">
               <ul className="menu__list">
-                <li className="menu__item" onClick={() => pickCountry("KZ")}>
+                <li className="menu__item" onClick={() => setCountry("KZ")}>
                   <img
                     alt="kaz-flag"
                     src={require("../assets/img/kazakhstan-32.png")}
                   />
                   Қазақстан
                 </li>{" "}
-                <li className="menu__item" onClick={() => pickCountry("MN")}>
+                <li className="menu__item" onClick={() => setCountry("MN")}>
                   <img
                     alt="mgl-flag"
                     src={require("../assets/img/mongolia-32.png")}
                   />
                   Моңғолия
                 </li>
-                <li className="menu__item" onClick={() => pickCountry("RU")}>
+                <li className="menu__item" onClick={() => setCountry("RU")}>
                   <img
                     alt="rus-flag"
                     src={require("../assets/img/russia-32.png")}
@@ -127,8 +104,8 @@ export function Registration() {
                   },
                 })}
                 type="tel"
-                value={phoneNumber || ""}
-                onChange={(e) => enterPhoneNum(e.target.value)}
+                // value={phoneNumber || ""}
+                // onChange={(e) => enterPhoneNum(e.target.value)}
               />
             )}
             {country === "MN" && (
@@ -141,8 +118,8 @@ export function Registration() {
                   },
                 })}
                 type="tel"
-                value={phoneNumber || ""}
-                onChange={(e) => enterPhoneNum(e.target.value)}
+                // value={phoneNumber || ""}
+                // onChange={(e) => enterPhoneNum(e.target.value)}
               />
             )}
             {country === "RU" && (
@@ -155,8 +132,8 @@ export function Registration() {
                   },
                 })}
                 type="tel"
-                value={phoneNumber || ""}
-                onChange={(e) => enterPhoneNum(e.target.value)}
+                // value={phoneNumber || ""}
+                // onChange={(e) => enterPhoneNum(e.target.value)}
               />
             )}
           </div>
@@ -175,8 +152,8 @@ export function Registration() {
             placeholder="Есіміңіз"
             type="text"
             id="2"
-            value={name || ""}
-            onChange={(e) => enterName(e.target.value)}
+            // value={name || ""}
+            // onChange={(e) => enterName(e.target.value)}
             className={"form-control"}
           />
         </div>
@@ -198,8 +175,8 @@ export function Registration() {
             placeholder="Email"
             type="email"
             id="3"
-            value={email || ""}
-            onChange={(e) => enterEmail(e.target.value)}
+            // value={email || ""}
+            // onChange={(e) => enterEmail(e.target.value)}
             className={"form-control"}
           />
         </div>
@@ -217,8 +194,8 @@ export function Registration() {
             placeholder="Messenger сілтемесі"
             type="link"
             id="6"
-            value={messenger || ""}
-            onChange={(e) => enterMessenger(e.target.value)}
+            // value={messenger || ""}
+            // onChange={(e) => enterMessenger(e.target.value)}
             className={"form-control"}
           />
           <Link
@@ -226,7 +203,7 @@ export function Registration() {
               "https://www.youtube.com/watch?v=mAXtasUgY0k&ab_channel=%D0%90%D0%BD%D0%B3%D0%B5%D0%BB%D0%B8%D0%BD%D0%B0%D0%9C%D0%B8%D1%82%D1%87%D0%B5%D0%BB%D0%BB"
             }
           >
-            Қалай аламын?
+            Сілтемені алуға нұсқаулық
           </Link>
         </div>
         <span>{errors?.messenger?.message}</span>
@@ -264,7 +241,7 @@ export function Registration() {
         </div>
 
         {/* Forgot password? */}
-        <Link href="" className={"form-check-label"}>
+        <Link to="" className={"form-check-label"}>
           Құпиясөзді ұмыттыңыз ба?
         </Link>
 
@@ -299,8 +276,13 @@ export function Registration() {
         </button>
 
         {/* Privacy policy */}
-        <Link href="/privacy" className={"form-check-label"}>
+        <Link to="/privacy" className={"form-check-label"}>
           Тіркелу арқылы құпиялық саясатымен келісемін
+        </Link>
+
+        {/* Link to Login */}
+        <Link to="/login" className={"login-link"}>
+          Менде аккаунт бар
         </Link>
       </form>
     </div>

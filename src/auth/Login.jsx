@@ -2,46 +2,27 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import ReactInputMask from "react-input-mask";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { authUser, setCountry, setPhoneNum } from "../redux/auth.js";
+import { useDispatch } from "react-redux";
+import { login } from "../redux/auth.js";
 
 export function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const [eye, setEye] = useState("");
   const [showMenu, setShowMenu] = useState("");
-
-  const { country, phoneNumber, status } = useSelector(
-    (state) => state.auth.user
-  );
-
-  function pickCountry(ctry) {
-    dispatch(setCountry(ctry));
-  }
-  function enterPhoneNum(e) {
-    dispatch(setPhoneNum(e));
-  }
+  const [country, setCountry] = useState("KZ");
 
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm({ mode: "onBlur" });
 
   const loginUserFunc = (data) => {
-    const newData = {
-      status,
-      ...data,
-    };
-    dispatch(authUser({ user: newData }));
-  };
-
-  function onLoginClick() {
+    dispatch(login({ data }));
     navigate("/home");
-  }
-
-  const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,24}$/;
+  };
 
   return (
     <div className={"registration-form"}>
@@ -78,21 +59,21 @@ export function Login() {
           {showMenu && (
             <div className="menu">
               <ul className="menu__list">
-                <li className="menu__item" onClick={() => pickCountry("KZ")}>
+                <li className="menu__item" onClick={() => setCountry("KZ")}>
                   <img
                     alt="kaz-flag"
                     src={require("../assets/img/kazakhstan-32.png")}
                   />{" "}
                   Қазақстан
                 </li>
-                <li className="menu__item" onClick={() => pickCountry("MN")}>
+                <li className="menu__item" onClick={() => setCountry("MN")}>
                   <img
                     alt="mgl-flag"
                     src={require("../assets/img/mongolia-32.png")}
                   />
                   Моңғолия
                 </li>
-                <li className="menu__item" onClick={() => pickCountry("RU")}>
+                <li className="menu__item" onClick={() => setCountry("RU")}>
                   <img
                     alt="rus-flag"
                     src={require("../assets/img/russia-32.png")}
@@ -115,8 +96,8 @@ export function Login() {
                   },
                 })}
                 type="tel"
-                value={phoneNumber || ""}
-                onChange={(e) => enterPhoneNum(e.target.value)}
+                // value={phoneNumber || ""}
+                // onChange={(e) => enterPhoneNum(e.target.value)}
               />
             )}
             {country === "MN" && (
@@ -129,8 +110,8 @@ export function Login() {
                   },
                 })}
                 type="tel"
-                value={phoneNumber || ""}
-                onChange={(e) => enterPhoneNum(e.target.value)}
+                // value={phoneNumber || ""}
+                // onChange={(e) => enterPhoneNum(e.target.value)}
               />
             )}
             {country === "RU" && (
@@ -143,8 +124,8 @@ export function Login() {
                   },
                 })}
                 type="tel"
-                value={phoneNumber || ""}
-                onChange={(e) => enterPhoneNum(e.target.value)}
+                // value={phoneNumber || ""}
+                // onChange={(e) => enterPhoneNum(e.target.value)}
               />
             )}
           </div>
@@ -158,11 +139,6 @@ export function Login() {
               required: {
                 value: true,
                 message: "Құпиясөз жазылған жоқ",
-              },
-              pattern: {
-                message:
-                  "Кем дегенде 6 символды саннан, үлкен, кіші әріптерден тұру керек",
-                value: PWD_REGEX,
               },
             })}
             type={eye ? "text" : "password"}
@@ -184,16 +160,12 @@ export function Login() {
         </div>
 
         {/* Login btn */}
-        <button
-          type="submit"
-          className={"btn btn-primary"}
-          onClick={() => onLoginClick()}
-        >
+        <button type="submit" className={"btn btn-primary"}>
           Кіру
         </button>
 
         {/* Link to Roles */}
-        <Link href="/roles" className={"login-link"}>
+        <Link to="/roles" className={"login-link"}>
           Жүйеге тіркелу
         </Link>
       </form>
